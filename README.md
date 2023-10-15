@@ -22,7 +22,7 @@
   - Built-in Better `Text` Component
 - **Ready to use [React Native Reanimated 2](https://docs.swmansion.com/react-native-reanimated/) Integration**
 - **Native Splash Screen Integration**
-  - [React Native Splash Screen](https://github.com/crazycodeboy/react-native-splash-screen)
+  - [React Native Boot Splash](https://github.com/zoontek/react-native-bootsplash)
 - **Awesome [React Native Helpers](https://github.com/WrathChaos/react-native-helpers) Integration**
   - Noth Detection Support
   - Better Dimension Helper (Ex: ScreenWidth, ScreenHeight)
@@ -153,7 +153,7 @@ sdk.dir=/Users/username/Library/Android/sdk
 - [x] ~~Better Husky: Linter, Prettier and Commintlint~~
 - [x] ~~Removal of `react-native-animated-splash-screen`~~
 - [x] ~~New Theme Support with React Navigation~~
-- [x] ~~Implement the native splash screen with [react-native-splash-screen](https://github.com/crazycodeboy/react-native-splash-screen)~~
+- [x] ~~Implement the native splash screen with [react-native-bootsplash](https://github.com/zoontek/react-native-bootsplash)~~
 - [x] ~~Better and separated documentation~~
 - [x] ~~Axios Hooks~~
 - [x] ~~React Native New Architecture~~

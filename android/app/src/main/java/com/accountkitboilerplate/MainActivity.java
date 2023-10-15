@@ -7,15 +7,15 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate;
 
 // SplashScreen Imports
 import android.os.Bundle;
-import org.devio.rn.splashscreen.SplashScreen;
+import com.zoontek.rnbootsplash.RNBootSplash;
 
 public class MainActivity extends ReactActivity {
 
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-     SplashScreen.show(this);
-     super.onCreate(savedInstanceState);
+    RNBootSplash.init(this, R.style.BootTheme);
+    super.onCreate(savedInstanceState);
   }
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
@@ -34,12 +34,12 @@ public class MainActivity extends ReactActivity {
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {
     return new DefaultReactActivityDelegate(
-        this,
-        getMainComponentName(),
-        // If you opted-in for the New Architecture, we enable the Fabric Renderer.
-        DefaultNewArchitectureEntryPoint.getFabricEnabled(), // fabricEnabled
-        // If you opted-in for the New Architecture, we enable Concurrent React (i.e. React 18).
-        DefaultNewArchitectureEntryPoint.getConcurrentReactEnabled() // concurrentRootEnabled
-        );
+      this,
+      getMainComponentName(),
+      // If you opted-in for the New Architecture, we enable the Fabric Renderer.
+      DefaultNewArchitectureEntryPoint.getFabricEnabled(), // fabricEnabled
+      // If you opted-in for the New Architecture, we enable Concurrent React (i.e. React 18).
+      DefaultNewArchitectureEntryPoint.getConcurrentReactEnabled() // concurrentRootEnabled
+    );
   }
 }

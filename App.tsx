@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { LogBox, StatusBar, useColorScheme } from "react-native";
 import "react-native-gesture-handler";
-import SplashScreen from "react-native-splash-screen";
+import BootSplash from "react-native-bootsplash";
 /**
  * ? Local Imports
  */
@@ -24,15 +24,17 @@ const App = () => {
   const { magic } = useMagicSigner();
 
   useEffect(() => {
-    StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
-    if (isAndroid) {
-      StatusBar.setBackgroundColor("rgba(0,0,0,0)");
-      StatusBar.setTranslucent(true);
-    }
+    const init = async () => {
+      StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
+      if (isAndroid) {
+        StatusBar.setBackgroundColor("rgba(0,0,0,0)");
+        StatusBar.setTranslucent(true);
+      }
+    };
 
-    setTimeout(() => {
-      SplashScreen.hide();
-    }, 750);
+    init().finally(async () => {
+      await BootSplash.hide({ fade: true });
+    });
   }, [scheme, isDarkMode]);
 
   return (

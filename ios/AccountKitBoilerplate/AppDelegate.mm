@@ -1,7 +1,7 @@
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
-#import "RNSplashScreen.h"
+#import "RNBootSplash.h"
 
 @implementation AppDelegate
 
@@ -14,8 +14,6 @@
   self.initialProps = @{};
 
   bool didFinish=[super application:application didFinishLaunchingWithOptions:launchOptions];
-
-  [RNSplashScreen show];  // here
   return didFinish;
 }
 
@@ -36,6 +34,17 @@
 - (BOOL)concurrentRootEnabled
 {
   return true;
+}
+
+- (UIView *)createRootViewWithBridge:(RCTBridge *)bridge
+                          moduleName:(NSString *)moduleName
+                           initProps:(NSDictionary *)initProps {
+  UIView *rootView = [super createRootViewWithBridge:bridge
+                                          moduleName:moduleName
+                                           initProps:initProps];
+
+  [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];
+  return rootView;
 }
 
 @end
