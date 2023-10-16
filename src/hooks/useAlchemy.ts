@@ -1,4 +1,3 @@
-import { useAlertContext } from "@context/alert";
 import {
   Alchemy,
   GetContractsForOwnerResponse,
@@ -11,8 +10,6 @@ import Config from "react-native-config";
 import { Hex } from "viem";
 
 export const useAlchemy = () => {
-  const { dispatchAlert } = useAlertContext();
-
   const settings = {
     apiKey: Config.ALCHEMY_KEY,
     network: Network.ETH_SEPOLIA,
@@ -23,7 +20,13 @@ export const useAlchemy = () => {
   const getNftCollections = useCallback(
     async (
       owner: Hex,
-      pageKey?: string,
+      {
+        pageKey,
+        onError,
+      }: {
+        pageKey?: string;
+        onError?: (error: unknown) => void;
+      },
     ): Promise<GetContractsForOwnerResponse | null> => {
       try {
         const res = await alchemy.nft.getContractsForOwner(owner, {
@@ -33,41 +36,40 @@ export const useAlchemy = () => {
         return res;
       } catch (error) {
         console.error(error);
-        dispatchAlert({
-          type: "open",
-          alertType: "error",
-          message: `Error getting user nft collection for owner ${owner}`,
-        });
+        onError?.(error);
         return null;
       }
     },
-    [alchemy.nft, dispatchAlert],
+    [alchemy.nft],
   );
 
   const getNfts = useCallback(
     async (
       owner: Hex,
-      contract: Hex,
-      pageKey?: string,
+      {
+        contract,
+        pageKey,
+        onError,
+      }: {
+        contract?: Hex;
+        pageKey?: string;
+        onError?: (error: unknown) => void;
+      },
     ): Promise<OwnedNftsResponse | null> => {
       try {
         const res = await alchemy.nft.getNftsForOwner(owner, {
           pageKey,
-          contractAddresses: [contract],
+          contractAddresses: contract ? [contract] : undefined,
           excludeFilters: [NftFilters.SPAM, NftFilters.AIRDROPS],
         });
         return res;
       } catch (error) {
         console.error(error);
-        dispatchAlert({
-          type: "open",
-          alertType: "error",
-          message: `Error getting user nfts for contract ${contract} owned by owner ${owner}`,
-        });
+        onError?.(error);
         return null;
       }
     },
-    [alchemy.nft, dispatchAlert],
+    [alchemy.nft],
   );
 
   return {
