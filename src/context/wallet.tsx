@@ -16,6 +16,7 @@ import { MagicAuth, MagicAuthType } from "types/magic";
 import { useAlertContext } from "./alert";
 
 type WalletContextProps = {
+  loading: boolean;
   // Functions
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   login: (type: MagicAuthType, ...params: any[]) => Promise<void>;
@@ -30,6 +31,7 @@ type WalletContextProps = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const defaultUnset: any = null;
 const WalletContext = createContext<WalletContextProps>({
+  loading: false,
   // Default Values
   provider: defaultUnset,
   login: () => Promise.resolve(),
@@ -43,6 +45,8 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
   const [magicAuth, setMagicAuth] = useState<MagicAuth>();
   const [scaAddress, setScaAddress] = useState<Address>();
+
+  const [loading, setLoading] = useState<boolean>(true);
 
   const {
     magic,
@@ -142,6 +146,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
       const isLoggedIn = await magic.user.isLoggedIn();
       if (!isLoggedIn) {
+        setLoading(false);
         setMagicAuth({
           address: null,
           isLoggedIn: false,
@@ -162,12 +167,11 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       console.log("User already logged in", metaData, provider.isConnected());
       if (provider.isConnected()) {
         setScaAddress(await provider.getAddress());
-        return;
       } else {
         await connectProviderToAccount(signer);
         setScaAddress(await provider.getAddress());
-        return;
       }
+      setLoading(false);
     },
     () => Promise.resolve(),
     [],
@@ -176,6 +180,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   return (
     <WalletContext.Provider
       value={{
+        loading,
         login,
         logout,
         magicAuth,

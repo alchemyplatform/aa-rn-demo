@@ -14,8 +14,11 @@ import Snackbar from "@shared-components/notification/SnackBar";
 import { ThemeProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigation from "./src/navigation";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 LogBox.ignoreAllLogs();
+
+const queryClient = new QueryClient();
 
 const App = () => {
   const scheme = useColorScheme();
@@ -38,18 +41,20 @@ const App = () => {
   }, [scheme, isDarkMode]);
 
   return (
-    <Compose
-      components={[
-        SafeAreaProvider,
-        AlertProvider,
-        ThemeProvider,
-        WalletProvider,
-      ]}
-    >
-      <magic.Relayer />
-      <Navigation />
-      <Snackbar />
-    </Compose>
+    <QueryClientProvider client={queryClient}>
+      <Compose
+        components={[
+          SafeAreaProvider,
+          AlertProvider,
+          ThemeProvider,
+          WalletProvider,
+        ]}
+      >
+        <magic.Relayer />
+        <Navigation />
+        <Snackbar />
+      </Compose>
+    </QueryClientProvider>
   );
 };
 

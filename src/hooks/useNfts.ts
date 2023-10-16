@@ -21,7 +21,7 @@ const useNfts = ({
   contract,
   onError,
 }: {
-  owner: Hex;
+  owner: Hex | undefined;
   contract?: Hex;
   onError?: (error: unknown) => void;
 }): UseNftsReturn => {

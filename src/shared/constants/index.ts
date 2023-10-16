@@ -6,5 +6,6 @@ export const SCREENS = {
   LOGIN: "Login",
   HOME: "Home",
   PROFILE: "Profile",
+  SETTINGS: "Settings",
   DETAIL: "Detail",
 };

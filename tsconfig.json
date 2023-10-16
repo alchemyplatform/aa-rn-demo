@@ -44,7 +44,8 @@
       "@local-storage": ["./services/local-storage"],
       "@hooks/*": ["./hooks/*"],
       "@context/*": ["./context/*"]
-    }
+    },
+    "types": ["react-native", "jest"]
   },
   "extends": "@tsconfig/react-native/tsconfig.json",
   "exclude": [

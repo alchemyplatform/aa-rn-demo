@@ -122,7 +122,7 @@ module.exports = {
     "unused-imports/no-unused-vars": 2,
     camelcase: 2,
     "prefer-destructuring": 2,
-    "no-nested-ternary": 2,
+    "no-nested-ternary": 0,
     "prettier/prettier": [
       "error",
       {

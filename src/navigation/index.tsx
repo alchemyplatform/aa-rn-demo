@@ -20,6 +20,7 @@ import DetailScreen from "@screens/detail/DetailScreen";
 import HomeScreen from "@screens/home/HomeScreen";
 import LoginScreen from "@screens/login/LoginScreen";
 import ProfileScreen from "@screens/profile/ProfileScreen";
+import SettingsScreen from "@screens/settings/SettingsScreen";
 
 // ? If you want to use stack or tab or both
 const Tab = createBottomTabNavigator();
@@ -123,6 +124,9 @@ const Navigation = () => {
         )}
         <Stack.Screen name={SCREENS.DETAIL}>
           {(props) => <DetailScreen {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name={SCREENS.SETTINGS}>
+          {(props) => <SettingsScreen {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

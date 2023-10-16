@@ -20,7 +20,7 @@ const useCollections = ({
   owner,
   onError,
 }: {
-  owner: Hex;
+  owner: Hex | undefined;
   onError?: (error: unknown) => void;
 }): UseCollectionsReturn => {
   const { getNftCollections } = useAlchemy();
@@ -35,7 +35,7 @@ const useCollections = ({
     isFetchingNextPage,
   } = useInfiniteQuery(
     [ApiEnum.COLLECTION, owner],
-    async ({ pageParam = "" }) => {
+    async ({ pageParam = undefined }) => {
       if (owner) {
         const ret = await getNftCollections(owner, {
           pageKey: pageParam,

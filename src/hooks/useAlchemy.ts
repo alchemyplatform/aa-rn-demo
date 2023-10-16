@@ -12,7 +12,7 @@ import { Hex } from "viem";
 export const useAlchemy = () => {
   const settings = {
     apiKey: Config.ALCHEMY_KEY,
-    network: Network.ETH_SEPOLIA,
+    network: Network.ETH_SEPOLIA, // Network.ETH_GOERLI,
   };
 
   const alchemy = new Alchemy(settings);
@@ -35,7 +35,7 @@ export const useAlchemy = () => {
         });
         return res;
       } catch (error) {
-        console.error(error);
+        console.error("getNftCollections", owner, error);
         onError?.(error);
         return null;
       }
@@ -64,7 +64,7 @@ export const useAlchemy = () => {
         });
         return res;
       } catch (error) {
-        console.error(error);
+        console.error("getNfts", owner, contract, error);
         onError?.(error);
         return null;
       }

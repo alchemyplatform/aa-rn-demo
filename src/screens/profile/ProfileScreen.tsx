@@ -1,83 +1,92 @@
-import { useTheme } from "@react-navigation/native";
-import { Card } from "@rneui/themed";
-import React, { useMemo } from "react";
-import { Text, View } from "react-native";
+import React, { ReactElement, useState } from "react";
 import {
-  GestureHandlerRootView,
-  ScrollView,
-} from "react-native-gesture-handler";
-
+  FlatList,
+  ListRenderItemInfo,
+  Platform,
+  RefreshControl,
+} from "react-native";
 /**
  * ? Local Imports
  */
 import { useWalletContext } from "@context/wallet";
-import { TouchableButton } from "@shared-components/button/TouchableButton";
-import createStyles from "./ProfileScreen.style";
+import useCollections from "@hooks/useCollections";
+import Container from "@shared-components/atom/Container";
+import { ContractForOwner } from "alchemy-sdk";
+import ProfileFooter from "./ProfileFooter";
+import ProfileHeader from "./ProfileHeader";
+import ProfileCollectionNft from "./ProfileCollectionNft";
+import SelectedCollectionNftsSheet from "./SelectedCollectionNftsSheet";
 
 interface ProfileScreenProps {}
 
 const ProfileScreen: React.FC<ProfileScreenProps> = () => {
-  const theme = useTheme();
-  const styles = useMemo(() => createStyles(theme), [theme]);
+  const { scaAddress: address } = useWalletContext();
+  // console.log("scaAddress", scaAddress);
+  // const address = "0xcCCAFb0d7f4a8606D7309584B70dcdfdaB8Ec9c9";
+  const useCollectionsRet = useCollections({
+    owner: address,
+  });
+  const { isRefetching, remove, refetch, fetchNextPage, items, hasNextPage } =
+    useCollectionsRet;
 
-  const { magicAuth, scaAddress, logout } = useWalletContext();
+  const profileHeader = <ProfileHeader />;
+
+  const profileFooter = <ProfileFooter {...useCollectionsRet} />;
+
+  const [selectedCollectionNft, setSelectedCollectionNft] =
+    useState<ContractForOwner | null>(null);
 
   return (
-    <View style={styles.container}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={[
-            styles.contentContainer,
-            { flexGrow: 1, justifyContent: "center" },
-          ]}
-          keyboardShouldPersistTaps="handled"
-        >
-          <Card>
-            <Card.Title style={{ marginVertical: 24 }}>Account Info</Card.Title>
-            <View style={styles.infoContainer}>
-              {magicAuth!.email && (
-                <View style={styles.row}>
-                  <Text style={styles.bold}>Email:</Text>
-                  <Text>{magicAuth!.email}</Text>
-                </View>
-              )}
-              {magicAuth!.phoneNumber && (
-                <View style={styles.row}>
-                  <Text style={styles.bold}>Phone Number:</Text>
-                  <Text>{magicAuth!.phoneNumber}</Text>
-                </View>
-              )}
-              {magicAuth!.oAuthRedirectResult && (
-                <View style={styles.row}>
-                  <Text style={styles.bold}>Provider:</Text>
-                  <Text>{magicAuth!.oAuthRedirectResult.oauth.provider}</Text>
-                </View>
-              )}
-              <View style={styles.column}>
-                <Text style={styles.bold}>Owner Address:</Text>
-                <Text>{magicAuth!.address}</Text>
-              </View>
-              {scaAddress && (
-                <View style={styles.column}>
-                  <Text style={styles.bold}>Wallet Address:</Text>
-                  <Text>{scaAddress}</Text>
-                </View>
-              )}
-              {magicAuth!.did && (
-                <View style={styles.column}>
-                  <Text style={styles.bold}>DID:</Text>
-                  <Text>{magicAuth!.did}</Text>
-                </View>
-              )}
-            </View>
-            <View style={[styles.margin10, { marginVertical: 24 }]}>
-              <TouchableButton handler={() => logout()} title="Logout" />
-            </View>
-          </Card>
-        </ScrollView>
-      </GestureHandlerRootView>
-    </View>
+    <Container
+      style={{ marginBottom: Platform.select({ ios: -30 }) }}
+      safeArea={false}
+    >
+      <FlatList
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetching}
+            onRefresh={(): void => {
+              remove();
+              refetch();
+            }}
+          />
+        }
+        ListHeaderComponent={profileHeader}
+        ListFooterComponent={profileFooter}
+        data={items}
+        keyExtractor={(item: ContractForOwner): string =>
+          `${address}:${item.address}`
+        }
+        onEndReached={(): void => {
+          if (hasNextPage) {
+            fetchNextPage();
+          }
+        }}
+        onEndReachedThreshold={0.5}
+        initialNumToRender={10}
+        numColumns={2}
+        contentContainerStyle={{ gap: 4 }}
+        columnWrapperStyle={{ gap: 8 }}
+        renderItem={({
+          item,
+        }: ListRenderItemInfo<ContractForOwner>): ReactElement => {
+          return (
+            <ProfileCollectionNft
+              collection={item}
+              onSelect={(): void => setSelectedCollectionNft(item)}
+            />
+          );
+        }}
+      />
+
+      {address && selectedCollectionNft && (
+        <SelectedCollectionNftsSheet
+          address={address}
+          selectedCollectionNft={selectedCollectionNft}
+          onClose={(): void => setSelectedCollectionNft(null)}
+        />
+      )}
+    </Container>
   );
 };
 
