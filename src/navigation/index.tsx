@@ -123,7 +123,7 @@ const Navigation = () => {
           <Stack.Screen name={SCREENS.AUTH} component={AuthNavigation} />
         )}
         <Stack.Screen name={SCREENS.DETAIL}>
-          {(props) => <DetailScreen {...props} />}
+          {(/*props*/) => <DetailScreen /*{...props}*/ />}
         </Stack.Screen>
         <Stack.Screen name={SCREENS.SETTINGS}>
           {(props) => <SettingsScreen {...props} />}

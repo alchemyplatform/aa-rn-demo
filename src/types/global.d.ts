@@ -25,10 +25,8 @@ export type RootStackParamList = {
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>;
 
-export type RootTabParamList = {
-  Login: undefined;
-  Web3: undefined;
-};
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type RootTabParamList = {};
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   CompositeScreenProps<
@@ -36,10 +34,26 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
     NativeStackScreenProps<RootStackParamList>
   >;
 
-export type TabOneParamList = {
-  LoginScreen: undefined;
-};
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type HomeTabParamList = {};
 
-export type TabTwoParamList = {
-  Web3Screen: undefined;
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type ProfileTabParamList = {};
+
+export type NominalType<T extends string> = { __type: T };
+
+export type unixTime = string & NominalType<"unixTime">;
+
+export type ItemListType<T = string> = {
+  label: string;
+  value: T;
+}[];
+
+export type TrueOrErrReturn<T = string> =
+  | { success: true; value: T }
+  | { success: false; errMsg: string };
+
+export type ActionStartEndCallback = {
+  start?: () => void;
+  end?: () => void;
 };

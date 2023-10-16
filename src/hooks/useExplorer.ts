@@ -1,3 +1,4 @@
+import { chain } from "@shared-config/env";
 import { useCallback } from "react";
 
 export type UseExplorerReturn = {
@@ -20,7 +21,7 @@ const useExplorer = (): UseExplorerReturn => {
       type: "tx" | "address" | "nft";
     }): string => {
       if (type === "tx") {
-        return `https://sepolia.etherscan.io/${type}/${address}`;
+        return `${chain.blockExplorers.default.url}/${type}/${address}`;
       }
 
       tokenId =
@@ -31,8 +32,8 @@ const useExplorer = (): UseExplorerReturn => {
           : tokenId;
 
       return tokenId
-        ? `https://sepolia.etherscan.io/${type}/${address}/${tokenId}`
-        : `https://sepolia.etherscan.io/${type}/${address}`;
+        ? `${chain.blockExplorers.default.url}/${type}/${address}/${tokenId}`
+        : `${chain.blockExplorers.default.url}/${type}/${address}`;
     },
     [],
   );

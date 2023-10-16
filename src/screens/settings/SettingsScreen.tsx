@@ -11,27 +11,61 @@ import Header from "@shared-components/atom/Header";
 import FormModal from "@shared-components/atom/FormModal";
 import Container from "@shared-components/atom/Container";
 import FormText from "@shared-components/atom/FormText";
+import { chain } from "@shared-config/env";
+import ViewHorizontalDivider from "@shared-components/atom/ViewHorizontalDivider";
+import Clipboard from "@react-native-clipboard/clipboard";
+import { useAlertContext } from "@context/alert";
+import Row from "@shared-components/atom/Row";
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
 
 interface SettingsScreenProps {}
 
 const SettingTextItem = (props: {
   name: string;
   text?: string;
+  copiable?: boolean;
 }): ReactElement => {
+  const { dispatchAlert } = useAlertContext();
   const { name, text } = props;
-  return (
+  const inner = (
     <View style={styles.item}>
-      <FormText
-        font={"B"}
-        color={colors.black._900}
-        style={{ marginBottom: 4 }}
-      >
-        {name}
-      </FormText>
-      <FormText size={12} font={"R"} color={colors.primary._400}>
+      <Row style={{ columnGap: 8 }}>
+        <FormText
+          font={"B"}
+          color={colors.black._900}
+          style={{ marginBottom: 8 }}
+        >
+          {name}
+        </FormText>
+        {props.copiable && (
+          <Icon
+            name="copy"
+            type={IconType.FontAwesome5}
+            color={colors.black._500}
+            style={{ marginTop: 2 }}
+            size={14}
+          />
+        )}
+      </Row>
+      <FormText style={{ fontWeight: "400" }} color={colors.primary._400}>
         {text}
       </FormText>
     </View>
+  );
+  if (!props.copiable || !props.text) return inner;
+  return (
+    <TouchableOpacity
+      onPress={(): void => {
+        dispatchAlert({
+          type: "open",
+          alertType: "info",
+          message: `${name} copied`,
+        });
+        Clipboard.setString(props.text!);
+      }}
+    >
+      {inner}
+    </TouchableOpacity>
   );
 };
 
@@ -55,26 +89,42 @@ const SettingsScreen: React.FC<SettingsScreenProps> = () => {
           containerStyle={{ backgroundColor: "transparent" }}
         />
         <View style={styles.itemGroup}>
+          {magicAuth && <SettingTextItem name={"Chain"} text={chain.name} />}
+          <ViewHorizontalDivider />
           {magicAuth?.email && (
             <SettingTextItem name={"Email"} text={magicAuth.email} />
           )}
+          <ViewHorizontalDivider />
           {magicAuth?.phoneNumber && (
             <SettingTextItem
               name={"Phone Number"}
               text={magicAuth.phoneNumber}
             />
           )}
+          <ViewHorizontalDivider />
+          {magicAuth && <SettingTextItem name={"Signer Type"} text={"magic"} />}
+          <ViewHorizontalDivider />
           {magicAuth?.oAuthRedirectResult && (
             <SettingTextItem
               name={"Provider"}
               text={magicAuth.oAuthRedirectResult.oauth.provider}
             />
           )}
+          <ViewHorizontalDivider />
           {magicAuth?.address && (
-            <SettingTextItem name={"Owner"} text={magicAuth.address} />
+            <SettingTextItem
+              name={"Owner"}
+              text={magicAuth.address}
+              copiable={true}
+            />
           )}
+          <ViewHorizontalDivider />
           {scaAddress && (
-            <SettingTextItem name={"Wallet Address"} text={scaAddress} />
+            <SettingTextItem
+              name={"Wallet Address"}
+              text={scaAddress}
+              copiable={true}
+            />
           )}
         </View>
         <View style={(styles.itemGroup, { alignSelf: "center" })}>
@@ -84,7 +134,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = () => {
               setVisibleSignOutModal(true);
             }}
           >
-            <FormText font={"SB"} color={colors.black._300}>
+            <FormText font={"SB"} color={colors.black._700}>
               Sign Out
             </FormText>
           </TouchableOpacity>
@@ -117,18 +167,21 @@ export default SettingsScreen;
 const styles = StyleSheet.create({
   container: { flex: 1 },
   body: {
+    backgroundColor: colors.black._90005,
     flex: 1,
     rowGap: 12,
+    paddingHorizontal: 24,
+    paddingVertical: 36,
   },
-  itemGroup: { backgroundColor: "white" },
+  itemGroup: { backgroundColor: colors.white, borderRadius: 9 },
   item: {
-    paddingVertical: 16,
+    paddingVertical: 12,
     paddingHorizontal: 20,
     flexDirection: "column",
     justifyContent: "space-between",
   },
   button: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.warning,
     borderColor: colors.black._100,
     borderWidth: 1,
     borderRadius: 9,

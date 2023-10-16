@@ -1,34 +1,53 @@
-import React, { useMemo } from "react";
-import { View } from "react-native";
-import { useTheme } from "@react-navigation/native";
-import * as NavigationService from "react-navigation-helpers";
-/**
- * ? Local Imports
- */
-import createStyles from "./DetailScreen.style";
-import Text from "@shared-components/text-wrapper/TextWrapper";
-import RNBounceable from "@freakycoder/react-native-bounceable";
+import React, { ReactElement } from "react";
+// import { StyleSheet } from "react-native";
+// import * as NavigationService from "react-navigation-helpers";
 
-interface DetailScreenProps {}
+// import NftDetails from "../../components/NftDetails";
+// import Container from "@shared-components/atom/Container";
+// import Header from "@shared-components/atom/Header";
 
-const DetailScreen: React.FC<DetailScreenProps> = () => {
-  const theme = useTheme();
-  const { colors } = theme;
-  const styles = useMemo(() => createStyles(theme), [theme]);
-
+const DetailScreen = (): ReactElement => {
   return (
-    <View style={styles.container}>
-      <Text h1 color={colors.text}>
-        Detail Screen
-      </Text>
-      <RNBounceable
-        style={styles.buttonStyle}
-        onPress={() => NavigationService.goBack()}
-      >
-        <Text color={colors.white}>Go back to Home</Text>
-      </RNBounceable>
-    </View>
+    // <Container style={styles.container}>
+    //   <Header
+    //     title={"NFT Info"}
+    //     left="back"
+    //     onPressLeft={() => {
+    //       NavigationService.goBack();
+    //     }}
+    //   />
+    //   <NftDetails
+    //     nftContract={params.nftContract}
+    //     tokenId={params.tokenId}
+    //     type={params.nftContractType}
+    //     chain={params.chain}
+    //     item={params.item}
+    //   />
+    // </Container>
+    <></>
   );
 };
 
 export default DetailScreen;
+
+// const styles = StyleSheet.create({
+//   container: { flex: 1 },
+//   body: {
+//     flex: 1,
+//     justifyContent: "space-between",
+//   },
+//   imageBox: { width: "100%", height: 250, marginVertical: 10 },
+//   item: {
+//     marginVertical: 3,
+//   },
+//   info: {
+//     flex: 1,
+//     padding: 10,
+//     justifyContent: "space-between",
+//   },
+//   infoDetails: { rowGap: 10 },
+//   headText: {
+//     fontWeight: "bold",
+//     marginBottom: 4,
+//   },
+// });

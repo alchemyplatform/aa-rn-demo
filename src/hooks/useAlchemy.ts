@@ -1,3 +1,4 @@
+import { chain } from "@shared-config/env";
 import {
   Alchemy,
   GetContractsForOwnerResponse,
@@ -12,7 +13,7 @@ import { Hex } from "viem";
 export const useAlchemy = () => {
   const settings = {
     apiKey: Config.ALCHEMY_KEY,
-    network: Network.ETH_SEPOLIA, // Network.ETH_GOERLI,
+    network: `eth-${chain.network}` as Network,
   };
 
   const alchemy = new Alchemy(settings);
@@ -31,7 +32,7 @@ export const useAlchemy = () => {
       try {
         const res = await alchemy.nft.getContractsForOwner(owner, {
           pageKey,
-          excludeFilters: [NftFilters.SPAM, NftFilters.AIRDROPS],
+          excludeFilters: [NftFilters.SPAM],
         });
         return res;
       } catch (error) {
@@ -60,7 +61,7 @@ export const useAlchemy = () => {
         const res = await alchemy.nft.getNftsForOwner(owner, {
           pageKey,
           contractAddresses: contract ? [contract] : undefined,
-          excludeFilters: [NftFilters.SPAM, NftFilters.AIRDROPS],
+          excludeFilters: [NftFilters.SPAM],
         });
         return res;
       } catch (error) {
