@@ -5,9 +5,14 @@ type FormImageProps = {
   size?: number;
 } & FastImageProps;
 const FormImage = (props: FormImageProps): ReactElement => {
-  const { size = 20, style, ...rest } = props;
+  const { size, style, ...rest } = props;
 
-  return <FastImage style={[{ width: size, height: size }, style]} {...rest} />;
+  return (
+    <FastImage
+      style={[{ width: size ?? "100%", height: size ?? "100%" }, style]}
+      {...rest}
+    />
+  );
 };
 
 export default FormImage;

@@ -1,7 +1,8 @@
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import React, { useEffect } from "react";
 import { LogBox, StatusBar, useColorScheme } from "react-native";
-import "react-native-gesture-handler";
 import BootSplash from "react-native-bootsplash";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 /**
  * ? Local Imports
  */
@@ -13,8 +14,8 @@ import { useMagicSigner } from "@hooks/useMagicSigner";
 import Snackbar from "@shared-components/notification/SnackBar";
 import { ThemeProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Navigation from "./src/navigation";
 import { QueryClient, QueryClientProvider } from "react-query";
+import Navigation from "./src/navigation";
 
 LogBox.ignoreAllLogs();
 
@@ -41,20 +42,23 @@ const App = () => {
   }, [scheme, isDarkMode]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Compose
-        components={[
-          SafeAreaProvider,
-          AlertProvider,
-          ThemeProvider,
-          WalletProvider,
-        ]}
-      >
-        <magic.Relayer />
-        <Navigation />
-        <Snackbar />
-      </Compose>
-    </QueryClientProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryClientProvider client={queryClient}>
+        <Compose
+          components={[
+            SafeAreaProvider,
+            AlertProvider,
+            ThemeProvider,
+            WalletProvider,
+            BottomSheetModalProvider,
+          ]}
+        >
+          <magic.Relayer />
+          <Navigation />
+          <Snackbar />
+        </Compose>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 };
 

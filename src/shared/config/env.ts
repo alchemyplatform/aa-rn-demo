@@ -10,4 +10,4 @@ export const lightAccountFactoryAddress = getDefaultLightAccountFactory(chain);
 export const isDev = Config.NODE_ENV === "development";
 export const magicApiKey = Config.MAGIC_API_KEY!;
 export const gasManagerPolicyId = Config.ALCHEMY_GAS_MANAGER_POLICY_ID!;
-export const alchemyRpcUrl = Config.ALCHEMY_RPC_URL;
+export const alchemyRpcUrl = `${Config.ALCHEMY_RPC_URL}/${Config.ALCHEMY_KEY}`;

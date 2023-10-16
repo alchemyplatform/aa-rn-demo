@@ -12,16 +12,16 @@ import { useWalletContext } from "@context/wallet";
 import useCollections from "@hooks/useCollections";
 import Container from "@shared-components/atom/Container";
 import { ContractForOwner } from "alchemy-sdk";
+import ProfileCollectionNft from "./ProfileCollectionNft";
 import ProfileFooter from "./ProfileFooter";
 import ProfileHeader from "./ProfileHeader";
-import ProfileCollectionNft from "./ProfileCollectionNft";
 import SelectedCollectionNftsSheet from "./SelectedCollectionNftsSheet";
 
 interface ProfileScreenProps {}
 
 const ProfileScreen: React.FC<ProfileScreenProps> = () => {
   const { scaAddress: address } = useWalletContext();
-  // console.log("scaAddress", scaAddress);
+  console.log("scaAddress", address);
   // const address = "0xcCCAFb0d7f4a8606D7309584B70dcdfdaB8Ec9c9";
   const useCollectionsRet = useCollections({
     owner: address,

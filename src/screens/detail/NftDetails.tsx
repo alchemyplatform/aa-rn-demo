@@ -1,164 +1,94 @@
-// import React, { ReactElement, useEffect, useState } from "react";
-// import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
+import FormImage from "@shared-components/atom/FormImage";
+import FormText from "@shared-components/atom/FormText";
+import ViewHorizontalDivider from "@shared-components/atom/ViewHorizontalDivider";
+import { convertTimestampToDate } from "@shared-utils";
+import { colors } from "@theme/color";
+import { BigNumber, OwnedNft } from "alchemy-sdk";
+import React, { ReactElement } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import NftAttributes, { NftAttributesType } from "./NftAttributes";
 
-// const NftDetails = ({
-//   nftContract,
-//   tokenId,
-//   type,
-//   chain,
-//   item,
-//   isNftInfo,
-// }: {
-//   nftContract: ContractAddr;
-//   tokenId: string;
-//   type: NftType;
-//   chain: SupportedNetworkEnum;
-//   item?: Moralis.NftItem;
-//   isNftInfo?: boolean;
-// }): ReactElement => {
-//   const { user } = useAuth();
-//   const { updateProfileImage } = useProfile({
-//     profileId: user?.auth?.profileId!,
-//   });
-//   const { ownerOf } = useNft({ nftContract, chain });
-//   const [tokenOwner, setTokenOwner] = useState<ContractAddr>();
-//   const [attributes, setAttributes] = useState<
-//     { trait_type: string; value: string }[]
-//   >([]);
+const NftDetails = ({ item }: { item: OwnedNft }): ReactElement => {
+  return (
+    <View style={{ flex: 1 }}>
+      <ScrollView>
+        <View style={styles.body}>
+          <View style={{ paddingBottom: 20, rowGap: 12 }}>
+            {item.title && (
+              <FormText size={18} font={"B"}>{`${item.title}`}</FormText>
+            )}
+            {item.acquiredAt?.blockTimestamp && (
+              <FormText font={"R"} color={colors.black._700}>
+                {convertTimestampToDate(
+                  BigNumber.from(item.acquiredAt.blockTimestamp),
+                )}
+              </FormText>
+            )}
+            <FormText font={"R"}>{item.description}</FormText>
+          </View>
 
-//   const { loading, uri, metadata, refetch, isRefetching } = useNftImage({
-//     nftContract,
-//     tokenId,
-//     type,
-//     chain,
-//     metadata: item?.metadata,
-//   });
+          <View style={styles.imageBox}>
+            <FormImage
+              source={{
+                uri:
+                  item.media.length > 0
+                    ? item.media[0].thumbnail ?? item.media[0].raw
+                    : undefined,
+              }}
+            />
+          </View>
+          <View>
+            <View style={styles.info}>
+              {item.rawMetadata?.external_url && (
+                <>
+                  <FormText font={"B"} size={16}>
+                    Token URI
+                  </FormText>
+                  <FormText color={colors.black._900}>
+                    {item.rawMetadata.external_url}
+                  </FormText>
+                  <ViewHorizontalDivider />
+                </>
+              )}
+            </View>
+            {item.rawMetadata?.attributes && (
+              <>
+                <View style={styles.info}>
+                  <FormText font={"B"} size={16}>
+                    Attributes
+                  </FormText>
+                </View>
+                <NftAttributes
+                  attributes={
+                    item.rawMetadata.attributes as NftAttributesType[]
+                  }
+                />
+              </>
+            )}
+          </View>
+        </View>
+      </ScrollView>
+    </View>
+  );
+};
 
-//   const { name } = useNft({ nftContract, chain });
+export default NftDetails;
 
-//   const { data: tokenName = "" } = useReactQuery(
-//     [QueryKeyEnum.NFT_TOKEN_NAME, nftContract, chain],
-//     async () => name(),
-//   );
-
-//   const nftRenderProps: MediaRendererProps = {
-//     src:
-//       uri ||
-//       item?.media?.media_collection?.high?.url ||
-//       item?.media?.original_media_url,
-//     alt: `${nftContract}:${tokenId}`,
-//     loading,
-//     height: 300,
-//     width: "100%",
-//   };
-
-//   useAsyncEffect(async (): Promise<void> => {
-//     const owner = await ownerOf({ tokenId });
-//     setTokenOwner(owner);
-//   }, [nftContract, tokenId]);
-
-//   useEffect(() => {
-//     try {
-//       setAttributes(JSON.parse(metadata || "")?.attributes);
-//     } catch {}
-//   }, []);
-
-//   const checkProfileUpdateAvailable = (): boolean => {
-//     return (
-//       !chain &&
-//       (UTIL.isMainnet()
-//         ? chain === SupportedNetworkEnum.ETHEREUM ||
-//           chain === SupportedNetworkEnum.POLYGON
-//         : chain === SupportedNetworkEnum.POLYGON)
-//     );
-//   };
-
-//   return (
-//     <View style={{ flex: 1 }}>
-//       <ScrollView
-//         refreshControl={
-//           <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
-//         }
-//       >
-//         <View style={styles.body}>
-//           <View style={{ paddingBottom: 20, rowGap: 12 }}>
-//             <FormText
-//               size={18}
-//               font={"B"}
-//             >{`${tokenName} #${tokenId}`}</FormText>
-//             <FormText
-//               style={{ alignSelf: "flex-end" }}
-//               color={COLOR.black._400}
-//             >
-//               {isNftInfo
-//                 ? t("Components.NftDetails.Owned", {
-//                     owner: tokenOwner
-//                       ? tokenOwner === user?.address
-//                         ? t("Components.NftDetails.Me")
-//                         : UTIL.truncate(tokenOwner)
-//                       : t("Components.NftDetails.Unknown"),
-//                   })
-//                 : t("Components.NftDetails.ListedBy", {
-//                     owner: tokenOwner
-//                       ? UTIL.truncate(tokenOwner)
-//                       : t("Components.NftDetails.Unknown"),
-//                   })}
-//             </FormText>
-//           </View>
-//           <VerifiedWrapper style={{ left: 32 }}>
-//             <View style={styles.imageBox}>
-//               <MediaRenderer {...nftRenderProps} />
-//             </View>
-//           </VerifiedWrapper>
-//           <View style={styles.info}>
-//             <NftAttributes attributes={attributes} />
-//           </View>
-//         </View>
-//       </ScrollView>
-//       {isNftInfo && tokenOwner === user?.address && (
-//         <View
-//           style={{
-//             position: "absolute",
-//             width: "100%",
-//             bottom: 0,
-//             paddingVertical: 20,
-//             paddingHorizontal: 12,
-//           }}
-//         >
-//           <FormButton
-//             textStyle={{
-//               fontWeight: "600",
-//             }}
-//             figure={"outline"}
-//             onPress={(): void => {
-//               item && updateProfileImage(item, chain);
-//             }}
-//             disabled={checkProfileUpdateAvailable() ? false : true}
-//           >
-//             {t("Components.NftDetails.SetAsTheProfileThumbnail")}
-//           </FormButton>
-//         </View>
-//       )}
-//     </View>
-//   );
-// };
-
-// export default NftDetails;
-
-// const styles = StyleSheet.create({
-//   body: {
-//     flex: 1,
-//     justifyContent: "space-between",
-//     padding: 20,
-//   },
-//   imageBox: {
-//     borderRadius: 18,
-//     overflow: "hidden",
-//     marginBottom: 12,
-//     alignItems: "center",
-//   },
-//   item: {
-//     marginVertical: 3,
-//   },
-//   info: {},
-// });
+const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    justifyContent: "space-between",
+    padding: 20,
+  },
+  imageBox: {
+    borderRadius: 18,
+    overflow: "hidden",
+    marginBottom: 12,
+    alignItems: "center",
+    height: 300,
+  },
+  info: {
+    padding: 4,
+    marginVertical: 8,
+  },
+});

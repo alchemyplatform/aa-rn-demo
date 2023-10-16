@@ -1,22 +1,22 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import React, { ReactElement, useMemo } from "react";
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from "react-native";
+import * as NavigationService from "react-navigation-helpers";
 
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { Hex } from "viem";
-import { ContractForOwner } from "alchemy-sdk";
 import useNfts from "@hooks/useNfts";
-import Indicator from "@shared-components/atom/Indicator";
-import FormText from "@shared-components/atom/FormText";
-import FormImage from "@shared-components/atom/FormImage";
 import FormBottomSheet from "@shared-components/atom/FormBottomSheet";
+import FormImage from "@shared-components/atom/FormImage";
+import FormText from "@shared-components/atom/FormText";
+import Indicator from "@shared-components/atom/Indicator";
+import { ContractForOwner } from "alchemy-sdk";
+import { Routes } from "types/navigation";
+import { Hex } from "viem";
 
 const SelectedCollectionNftsSheet = ({
   address,
@@ -66,6 +66,8 @@ const SelectedCollectionNftsSheet = ({
     >
       <View style={{ flex: 1 }}>
         <View style={styles.body}>
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
           <BottomSheetFlatList
             data={items}
             ListHeaderComponent={listHeaderComponent}
@@ -80,7 +82,11 @@ const SelectedCollectionNftsSheet = ({
               }
             }}
             renderItem={({ item }): ReactElement => (
-              <TouchableOpacity onPress={(): void => {}}>
+              <TouchableOpacity
+                onPress={(): void => {
+                  NavigationService.push(Routes.Detail, { item });
+                }}
+              >
                 <View
                   style={{
                     flex: 1,

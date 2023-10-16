@@ -1,3 +1,4 @@
+import { BigNumber } from "alchemy-sdk";
 import { URL } from "react-native-url-polyfill";
 
 export const capitalizeFirstLetter = (str: string) => {
@@ -90,3 +91,6 @@ export function mergeObjectArrays<T>(A: T[], B: T[], key: keyof T): T[] {
 
   return newArr;
 }
+
+export const convertTimestampToDate = (timestamp: BigNumber) =>
+  new Date(BigNumber.from(timestamp).mul(1000).toNumber()).toLocaleString();

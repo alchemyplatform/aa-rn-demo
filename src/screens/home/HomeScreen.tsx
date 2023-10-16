@@ -4,7 +4,6 @@ import React, { useMemo } from "react";
 import { FlatList, Image, View } from "react-native";
 import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as NavigationService from "react-navigation-helpers";
 /**
  * ? Local Imports
  */
@@ -17,7 +16,6 @@ import MockData from "./mock/MockData";
 import { useWalletContext } from "@context/wallet";
 import fonts from "@fonts";
 import Text from "@shared-components/text-wrapper/TextWrapper";
-import { SCREENS } from "@shared-constants";
 
 interface HomeScreenProps {}
 
@@ -29,7 +27,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   const { magicAuth } = useWalletContext();
 
   const handleItemPress = () => {
-    NavigationService.push(SCREENS.DETAIL);
+    // NavigationService.push(Rouites.Detail);
   };
 
   /* -------------------------------------------------------------------------- */

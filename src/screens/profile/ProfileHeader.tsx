@@ -1,16 +1,16 @@
 import React, { ReactElement } from "react";
 import { ImageBackground, Pressable, StyleSheet, View } from "react-native";
 
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ProfileWalletAddress from "./ProfileWalletAddress";
+import { useWalletContext } from "@context/wallet";
+import FormImage from "@shared-components/atom/FormImage";
 import FormText from "@shared-components/atom/FormText";
 import Row from "@shared-components/atom/Row";
 import { colors } from "@theme/color";
 import Icon, { IconType } from "react-native-dynamic-vector-icons";
-import FormImage from "@shared-components/atom/FormImage";
-import { useWalletContext } from "@context/wallet";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as NavigationService from "react-navigation-helpers";
-import { SCREENS } from "@shared-constants";
+import { Routes } from "types/navigation";
+import ProfileWalletAddress from "./ProfileWalletAddress";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type ProfileHeaderProps = {};
@@ -41,7 +41,7 @@ const ProfileHeader = ({}: ProfileHeaderProps): ReactElement => {
               <Pressable
                 style={styles.headerButton}
                 onPress={(): void => {
-                  NavigationService.push(SCREENS.SETTINGS);
+                  NavigationService.push(Routes.Setting);
                 }}
               >
                 <Icon type={IconType.FontAwesome5} name={"cog"} size={28} />

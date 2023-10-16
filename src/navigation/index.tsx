@@ -1,10 +1,4 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  NavigationContainer,
-  ParamListBase,
-  RouteProp,
-} from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { useColorScheme } from "react-native";
 import Icon, { IconType } from "react-native-dynamic-vector-icons";
@@ -12,19 +6,22 @@ import { isReadyRef, navigationRef } from "react-navigation-helpers";
 /**
  * ? Local & Shared Imports
  */
-import { SCREENS } from "@shared-constants";
 import { DarkTheme, LightTheme, palette } from "@theme/themes";
 // ? Screens
 import { useWalletContext } from "@context/wallet";
+import { NavigationContainer, RouteProp } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DetailScreen from "@screens/detail/DetailScreen";
 import HomeScreen from "@screens/home/HomeScreen";
 import LoginScreen from "@screens/login/LoginScreen";
 import ProfileScreen from "@screens/profile/ProfileScreen";
 import SettingsScreen from "@screens/settings/SettingsScreen";
+import { ParamListBase, Routes } from "types/navigation";
 
 // ? If you want to use stack or tab or both
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
+const MainStack = createNativeStackNavigator();
 
 const Navigation = () => {
   const scheme = useColorScheme();
@@ -38,6 +35,8 @@ const Navigation = () => {
   }, []);
 
   const renderTabIcon = (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     route: RouteProp<ParamListBase, string>,
     _focused: boolean,
     color: string,
@@ -45,10 +44,10 @@ const Navigation = () => {
   ) => {
     let iconName = "home";
     switch (route.name) {
-      case SCREENS.HOME:
+      case Routes.Home:
         iconName = "home";
         break;
-      case SCREENS.PROFILE:
+      case Routes.Profile:
         iconName = "user-circle";
         break;
       default:
@@ -81,7 +80,7 @@ const Navigation = () => {
           },
         })}
       >
-        <Tab.Screen name={SCREENS.LOGIN} component={LoginScreen} />
+        <Tab.Screen name={Routes.Login} component={LoginScreen} />
       </Tab.Navigator>
     );
   };
@@ -102,9 +101,19 @@ const Navigation = () => {
           },
         })}
       >
-        <Tab.Screen name={SCREENS.HOME} component={HomeScreen} />
-        <Tab.Screen name={SCREENS.PROFILE} component={ProfileScreen} />
+        <Tab.Screen name={Routes.Home} component={HomeScreen} />
+        <Tab.Screen name={Routes.Profile} component={ProfileScreen} />
       </Tab.Navigator>
+    );
+  };
+
+  const MainNavigation = () => {
+    return (
+      <MainStack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name={Routes.Main} component={TabNavigation} />
+        <Stack.Screen name={Routes.Detail} component={DetailScreen} />
+        <Stack.Screen name={Routes.Setting} component={SettingsScreen} />
+      </MainStack.Navigator>
     );
   };
 
@@ -118,16 +127,10 @@ const Navigation = () => {
     >
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {magicAuth?.isLoggedIn ? (
-          <Stack.Screen name={SCREENS.MAIN} component={TabNavigation} />
+          <Stack.Screen name={Routes.Main} component={MainNavigation} />
         ) : (
-          <Stack.Screen name={SCREENS.AUTH} component={AuthNavigation} />
+          <Stack.Screen name={Routes.Auth} component={AuthNavigation} />
         )}
-        <Stack.Screen name={SCREENS.DETAIL}>
-          {(/*props*/) => <DetailScreen /*{...props}*/ />}
-        </Stack.Screen>
-        <Stack.Screen name={SCREENS.SETTINGS}>
-          {(props) => <SettingsScreen {...props} />}
-        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
