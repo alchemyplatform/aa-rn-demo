@@ -11,10 +11,12 @@ import { Compose } from "@context/global";
 import { WalletProvider } from "@context/wallet";
 import { isAndroid } from "@freakycoder/react-native-helpers";
 import { useMagicSigner } from "@hooks/useMagicSigner";
+import PostTxResult from "@shared-components/molecule/PostTxResult";
 import Snackbar from "@shared-components/notification/SnackBar";
 import { ThemeProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { RecoilRoot } from "recoil";
 import Navigation from "./src/navigation";
 
 LogBox.ignoreAllLogs();
@@ -43,21 +45,24 @@ const App = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryClientProvider client={queryClient}>
-        <Compose
-          components={[
-            SafeAreaProvider,
-            AlertProvider,
-            ThemeProvider,
-            WalletProvider,
-            BottomSheetModalProvider,
-          ]}
-        >
-          <magic.Relayer />
-          <Navigation />
-          <Snackbar />
-        </Compose>
-      </QueryClientProvider>
+      <RecoilRoot>
+        <QueryClientProvider client={queryClient}>
+          <Compose
+            components={[
+              SafeAreaProvider,
+              AlertProvider,
+              ThemeProvider,
+              WalletProvider,
+              BottomSheetModalProvider,
+            ]}
+          >
+            <magic.Relayer />
+            <Navigation />
+            <Snackbar />
+            <PostTxResult />
+          </Compose>
+        </QueryClientProvider>
+      </RecoilRoot>
     </GestureHandlerRootView>
   );
 };
