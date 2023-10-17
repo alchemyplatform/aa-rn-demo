@@ -1,3 +1,5 @@
+import { Hex } from "viem";
+
 export enum PostTxStatus {
   POST = "POST",
   BROADCAST = "BROADCAST",
@@ -14,12 +16,12 @@ type StreamPost = {
 };
 type StreamBroadcast = {
   status: PostTxStatus.BROADCAST;
-  transactionHash: string;
+  transactionHash: Hex;
 };
 type StreamDone = {
   status: PostTxStatus.DONE;
   value?: {
-    transactionHash: string;
+    transactionHash: Hex;
   };
 };
 type StreamError = {

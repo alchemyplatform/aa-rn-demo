@@ -16,6 +16,7 @@ import HomeScreen from "@screens/home/HomeScreen";
 import LoginScreen from "@screens/login/LoginScreen";
 import ProfileScreen from "@screens/profile/ProfileScreen";
 import SettingsScreen from "@screens/settings/SettingsScreen";
+import PostTxResult from "@shared-components/molecule/PostTxResult";
 import { ParamListBase, Routes } from "types/navigation";
 
 // ? If you want to use stack or tab or both
@@ -131,6 +132,7 @@ const Navigation = () => {
         ) : (
           <Stack.Screen name={Routes.Auth} component={AuthNavigation} />
         )}
+        <PostTxResult />
       </Stack.Navigator>
     </NavigationContainer>
   );

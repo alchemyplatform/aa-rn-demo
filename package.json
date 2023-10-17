@@ -85,6 +85,7 @@
     "react-navigation-helpers": "^2.1.0",
     "react-query": "^3.39.3",
     "readable-stream": "^4.4.2",
+    "recoil": "^0.7.7",
     "rn-nodeify": "^10.3.0",
     "stream-browserify": "^3.0.0",
     "text-encoding": "^0.7.0",

@@ -22,6 +22,7 @@
           { "@event-emitter": "./src/services/event-emitter" },
           { "@local-storage": "./src/services/local-storage" },
           { "@hooks": "./src/hooks" },
+          { "@store": "./src/store" },
           { "@context": "./src/context" }
         ],
         "extensions": [".js", ".jsx", ".ts", ".tsx"]

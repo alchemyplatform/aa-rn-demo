@@ -1,142 +1,115 @@
-// import _ from 'lodash'
-// import { UTIL } from 'palm-core/libs'
-// import {
-//   ContractAddr,
-//   EncodedTxData,
-//   PostTxReturn,
-//   PostTxStatus,
-//   pToken,
-//   SupportedNetworkEnum,
-// } from 'palm-core/types'
-// import PkeyManager from 'palm-react-native/app/pkeyManager'
-// import useAuth from 'palm-react/hooks/auth/useAuth'
-// import postTxStore from 'palm-react/store/postTxStore'
-// import { useSetRecoilState } from 'recoil'
+import { SendUserOperationResult } from "@alchemy/aa-core";
+import { useAlertContext } from "@context/alert";
+import { useWalletContext } from "@context/wallet";
+import postTxStore from "@store/postTxStore";
+import { useRecoilState } from "recoil";
+import { PostTxReturn, PostTxStatus } from "types/postTx";
+import { Address, Hex, TransactionReceipt } from "viem";
 
-// import useWeb3 from './useWeb3'
+type UsePostTxReturn = {
+  postTx: (props: {
+    data: Hex;
+    target: Address;
+    value?: bigint;
+  }) => Promise<PostTxReturn>;
+};
 
-// type UsePostTxReturn = {
-//   getTxFee: (props: {
-//     data?: EncodedTxData
-//     to?: ContractAddr
-//     value?: pToken
-//   }) => Promise<pToken>
-//   postTx: (props: {
-//     data?: EncodedTxData
-//     to?: ContractAddr
-//     value?: pToken
-//   }) => Promise<PostTxReturn>
-// }
+export const usePostTx = async (): Promise<UsePostTxReturn> => {
+  const { provider, scaAddress } = useWalletContext();
+  const { dispatchAlert } = useAlertContext();
+  const [postTxResult, setPostTxResult] = useRecoilState(
+    postTxStore.postTxResult,
+  );
 
-// const gas = '300000'
+  const postTx = async ({
+    data,
+    target,
+    value,
+  }: {
+    data: Hex;
+    target: Address;
+    value?: bigint;
+  }): Promise<PostTxReturn> => {
+    if (scaAddress) {
+      let uoHash;
+      try {
+        const { hash }: SendUserOperationResult =
+          await provider.sendUserOperation({
+            target,
+            data,
+            value,
+          });
+        uoHash = hash;
+        setPostTxResult({
+          [uoHash]: {
+            status: PostTxStatus.POST,
+          },
+        });
+        const txHash = await provider.waitForUserOperationTransaction(uoHash);
+        setPostTxResult({
+          ...postTxResult,
+          [uoHash as Hex]: {
+            status: PostTxStatus.BROADCAST,
+            value: {
+              transactionHash: txHash,
+            },
+          },
+        });
+        const receipt: TransactionReceipt =
+          await provider.rpcClient.waitForTransactionReceipt({
+            hash: txHash,
+            onReplaced: (replacement) => {
+              if (replacement.reason === "cancelled") {
+                throw new Error("Transaction was cancelled");
+              }
+            },
+          });
+        setPostTxResult({
+          ...postTxResult,
+          [uoHash as Hex]: {
+            status: PostTxStatus.DONE,
+            value: receipt,
+          },
+        });
 
-// export const usePostTx = ({
-//   contractAddress,
-//   chain,
-// }: {
-//   contractAddress: ContractAddr
-//   chain: SupportedNetworkEnum
-// }): UsePostTxReturn => {
-//   const { user } = useAuth()
-//   const { web3 } = useWeb3(chain)
-//   const setPostTxResult = useSetRecoilState(postTxStore.postTxResult)
+        return {
+          success: true,
+          receipt,
+        };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        const errMsg = error?.message ? error.message : JSON.stringify(error);
+        if (uoHash) {
+          setPostTxResult({
+            ...postTxResult,
+            [uoHash as Hex]: {
+              status: PostTxStatus.ERROR,
+              error: errMsg,
+            },
+          });
+        }
 
-//   const getTxFee = async ({
-//     data,
-//     to,
-//     value,
-//   }: {
-//     data?: EncodedTxData
-//     to?: ContractAddr
-//     value?: pToken
-//   }): Promise<pToken> => {
-//     if (user) {
-//       const estimated = await web3.eth.estimateGas({
-//         from: user.address,
-//         to: to ?? contractAddress,
-//         gas,
-//         data: to ? undefined : data,
-//         value,
-//       })
-//       const price = await web3.eth.getGasPrice()
-//       return UTIL.toBn(estimated).multipliedBy(price).toString(10) as pToken
-//     }
-//     return '0' as pToken
-//   }
+        return {
+          success: false,
+          message: errMsg,
+          error,
+        };
+      }
+    } else {
+      const message = "Not logged in";
+      dispatchAlert({
+        type: "open",
+        alertType: "error",
+        message,
+      });
+      return {
+        success: false,
+        message,
+      };
+    }
+  };
 
-//   const postTx = async ({
-//     data,
-//     to,
-//     value,
-//   }: {
-//     data?: EncodedTxData
-//     to?: ContractAddr
-//     value?: pToken
-//   }): Promise<PostTxReturn> => {
-//     if (!to && _.isEmpty(data)) {
-//       const message = 'Post data is empty'
-//       return {
-//         success: false,
-//         message,
-//       }
-//     }
+  return { postTx };
+};
 
-//     setPostTxResult({ status: PostTxStatus.POST, chain })
-//     if (user) {
-//       try {
-//         const userAddress = user.address
-//         const pkey = await PkeyManager.getPkey()
-//         const account = web3.eth.accounts.privateKeyToAccount(pkey)
-//         web3.eth.accounts.wallet.add(account)
-
-//         const receipt = await web3.eth
-//           .sendTransaction({
-//             from: userAddress,
-//             to: to ?? contractAddress,
-//             gas,
-//             data: to ? undefined : data,
-//             value,
-//           })
-//           .on('transactionHash', function (transactionHash) {
-//             setPostTxResult({
-//               status: PostTxStatus.BROADCAST,
-//               transactionHash,
-//               chain,
-//             })
-//           })
-
-//         setPostTxResult({
-//           status: PostTxStatus.DONE,
-//           value: receipt,
-//           chain,
-//         })
-//         return {
-//           success: true,
-//           receipt,
-//         }
-//       } catch (error: any) {
-//         setPostTxResult({
-//           status: PostTxStatus.ERROR,
-//           error: error?.message ? error.message : JSON.stringify(error),
-//           chain,
-//         })
-//         return {
-//           success: false,
-//           message: _.toString(error),
-//           error,
-//         }
-//       }
-//     } else {
-//       const message = 'Not logged in'
-//       setPostTxResult({ status: PostTxStatus.ERROR, error: message, chain })
-//       return {
-//         success: false,
-//         message,
-//       }
-//     }
-//   }
-
-//   return { getTxFee, postTx }
-// }
-
-// export default usePostTx
+export default usePostTx;

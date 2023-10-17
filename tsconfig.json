@@ -43,6 +43,7 @@
       "@assets": ["./assets/"],
       "@local-storage": ["./services/local-storage"],
       "@hooks/*": ["./hooks/*"],
+      "@store/*": ["./store/*"],
       "@context/*": ["./context/*"]
     },
     "types": ["react-native", "jest"]

@@ -45,7 +45,6 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
   const [magicAuth, setMagicAuth] = useState<MagicAuth>();
   const [scaAddress, setScaAddress] = useState<Address>();
-
   const [loading, setLoading] = useState<boolean>(true);
 
   const {
