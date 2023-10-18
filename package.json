@@ -161,10 +161,6 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "postinstall": "patch-package"
   },
-  "engine": {
-    "node": "16.10.0",
-    "npm": "7.21.0"
-  },
   "react-native": {
     "crypto": "react-native-crypto",
     "http": "@tradle/react-native-http",
@@ -186,9 +182,6 @@
     "_stream_duplex": "readable-stream/duplex",
     "_stream_passthrough": "readable-stream/passthrough",
     "stream": "stream-browserify"
-  },
-  "resolutions": {
-    "@types/react": "17"
   },
   "jest": {
     "preset": "react-native",

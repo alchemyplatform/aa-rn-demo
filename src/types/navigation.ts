@@ -17,6 +17,11 @@ export enum Routes {
   Detail = "Detail",
 }
 
+type TabRouteParamsUnion = {
+  route: Routes.Tab;
+  params: undefined;
+};
+
 type AuthRouteParamsUnion = {
   route: Routes.Login;
   params: undefined;
@@ -50,7 +55,8 @@ export type RouteParamsUnion =
       params: undefined;
     }
   | AuthRouteParamsUnion
-  | MainRouteParamsUnion;
+  | MainRouteParamsUnion
+  | TabRouteParamsUnion;
 
 type ExtractParams<R extends Routes, U extends RouteParamsUnion> = U extends {
   route: R;
