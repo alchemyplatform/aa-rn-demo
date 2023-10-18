@@ -8,9 +8,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
  */
 import { AlertProvider } from "@context/alert";
 import { Compose } from "@context/global";
+import { MagicProvider, magic } from "@context/magic";
 import { WalletProvider } from "@context/wallet";
 import { isAndroid } from "@freakycoder/react-native-helpers";
-import { useMagicSigner } from "@hooks/useMagicSigner";
 import PostTxResult from "@shared-components/molecule/PostTxResult";
 import Snackbar from "@shared-components/notification/SnackBar";
 import { ThemeProvider } from "react-native-paper";
@@ -26,8 +26,6 @@ const queryClient = new QueryClient();
 const App = () => {
   const scheme = useColorScheme();
   const isDarkMode = scheme === "dark";
-
-  const { magic } = useMagicSigner();
 
   useEffect(() => {
     const init = async () => {
@@ -52,6 +50,7 @@ const App = () => {
               SafeAreaProvider,
               AlertProvider,
               ThemeProvider,
+              MagicProvider,
               WalletProvider,
               BottomSheetModalProvider,
             ]}

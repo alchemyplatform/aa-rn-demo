@@ -6,8 +6,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
  */
 export const useAsyncEffect = (
   mountCallback: () => Promise<any>,
-  unmountCallback: () => Promise<any>,
   deps: any[] = [],
+  unmountCallback: () => Promise<any> = () => Promise.resolve(),
 ): UseAsyncEffectResult => {
   const isMounted = useRef(false);
   const [isLoading, setIsLoading] = useState(false);

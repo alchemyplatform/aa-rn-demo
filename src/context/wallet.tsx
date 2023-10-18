@@ -1,8 +1,8 @@
 import { AlchemyProvider } from "@alchemy/aa-alchemy";
 import { Address } from "@alchemy/aa-core";
+import { magic, useMagicContext } from "@context/magic";
 import { useAlchemyProvider } from "@hooks/useAlchemyProvider";
 import { useAsyncEffect } from "@hooks/useAsyncEffect";
-import { useMagicSigner } from "@hooks/useMagicSigner";
 import { OAuthRedirectResult } from "@magic-ext/react-native-bare-oauth";
 import { entryPointAddress } from "@shared-config/env";
 import React, {
@@ -47,12 +47,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [scaAddress, setScaAddress] = useState<Address>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  const {
-    magic,
-    signer,
-    login: magicLogin,
-    logout: magicLogout,
-  } = useMagicSigner();
+  const { signer, login: magicLogin, logout: magicLogout } = useMagicContext();
   const { provider, connectProviderToAccount, disconnectProviderFromAccount } =
     useAlchemyProvider({ entryPointAddress });
 
@@ -95,24 +90,20 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
         });
       }
     },
-    [magicLogin, magic.user, dispatchAlert],
+    [magicLogin, dispatchAlert],
   );
 
-  useAsyncEffect(
-    async () => {
-      if (magicAuth === undefined || !magicAuth.isLoggedIn) {
-        return;
-      }
-      if (!provider.isConnected()) {
-        console.log("new login, connecting provider to account");
-        await connectProviderToAccount(signer);
-        setScaAddress(await provider.getAddress());
-        return;
-      }
-    },
-    () => Promise.resolve(),
-    [magicAuth?.isLoggedIn],
-  );
+  useAsyncEffect(async () => {
+    if (magicAuth === undefined || !magicAuth.isLoggedIn || !signer) {
+      return;
+    }
+    if (!provider.isConnected()) {
+      console.log("new login, connecting provider to account");
+      await connectProviderToAccount(signer);
+      setScaAddress(await provider.getAddress());
+      return;
+    }
+  }, [magicAuth?.isLoggedIn]);
 
   const logout = useCallback(async () => {
     try {
@@ -135,46 +126,42 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [magicLogout, disconnectProviderFromAccount, dispatchAlert]);
 
-  useAsyncEffect(
-    async () => {
-      if (magicAuth) {
-        return;
-      }
+  useAsyncEffect(async () => {
+    if (magicAuth || !signer) {
+      return;
+    }
 
-      const isLoggedIn = await magic.user.isLoggedIn();
-      if (!isLoggedIn) {
-        setLoading(false);
-        setMagicAuth({
-          address: null,
-          isLoggedIn: false,
-          metaData: null,
-        });
-        return;
-      }
-
-      const metaData = await magic.user.getInfo();
-      setMagicAuth({
-        address: metaData.publicAddress,
-        isLoggedIn: true,
-        metaData,
-        email: metaData.email,
-        phoneNumber: metaData.phoneNumber,
-      });
-
-      console.log("User already logged in", metaData, provider.isConnected());
-      if (provider.isConnected()) {
-        setScaAddress(await provider.getAddress());
-      } else {
-        console.log("alread logged in, connecting provider to account");
-        await connectProviderToAccount(signer);
-        console.log("connected provider to account", provider.isConnected());
-        setScaAddress(await provider.getAddress());
-      }
+    const isLoggedIn = await magic.user.isLoggedIn();
+    if (!isLoggedIn) {
       setLoading(false);
-    },
-    () => Promise.resolve(),
-    [],
-  );
+      setMagicAuth({
+        address: null,
+        isLoggedIn: false,
+        metaData: null,
+      });
+      return;
+    }
+
+    const metaData = await magic.user.getInfo();
+    setMagicAuth({
+      address: metaData.publicAddress,
+      isLoggedIn: true,
+      metaData,
+      email: metaData.email,
+      phoneNumber: metaData.phoneNumber,
+    });
+
+    console.log("User already logged in", metaData, provider.isConnected());
+    if (provider.isConnected()) {
+      setScaAddress(await provider.getAddress());
+    } else {
+      console.log("alread logged in, connecting provider to account");
+      await connectProviderToAccount(signer);
+      console.log("connected provider to account", provider.isConnected());
+      setScaAddress(await provider.getAddress());
+    }
+    setLoading(false);
+  }, []);
 
   return (
     <WalletContext.Provider
