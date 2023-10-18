@@ -1,8 +1,5 @@
-import RNBounceable from "@freakycoder/react-native-bounceable";
-import { useTheme } from "@react-navigation/native";
 import React, { useMemo } from "react";
-import { FlatList, Image, View } from "react-native";
-import Icon, { IconType } from "react-native-dynamic-vector-icons";
+import { FlatList, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 /**
  * ? Local Imports
@@ -13,18 +10,12 @@ import MockData from "./mock/MockData";
 /**
  * ? Shared Imports
  */
-import { useWalletContext } from "@context/wallet";
-import fonts from "@fonts";
-import Text from "@shared-components/text-wrapper/TextWrapper";
+import FormImage from "@shared-components/atom/FormImage";
 
 interface HomeScreenProps {}
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
-  const theme = useTheme();
-  const { colors } = theme;
-  const styles = useMemo(() => createStyles(theme), [theme]);
-
-  const { magicAuth } = useWalletContext();
+  const styles = useMemo(() => createStyles(), []);
 
   const handleItemPress = () => {
     // NavigationService.push(Rouites.Detail);
@@ -34,24 +25,23 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   /*                               Render Methods                               */
   /* -------------------------------------------------------------------------- */
 
-  const MenuButton = () => (
-    <RNBounceable>
-      <Icon
-        name="wallet"
-        type={IconType.FontAwesome5}
-        color={colors.calpyse}
-        size={30}
-      />
-    </RNBounceable>
-  );
-
   const Header = () => (
-    <View style={styles.header}>
-      <MenuButton />
-      <Image
-        resizeMode="cover"
-        source={require("../../assets/logo/kit-logo.png")}
-        style={styles.profilePicImageStyle}
+    <View
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: 16,
+      }}
+    >
+      <FormImage
+        source={require("../../assets/images/demo.png")}
+        width={200}
+        height={25}
+      />
+      <FormImage
+        source={require("../../assets/images/powered_by.png")}
+        width={150}
+        height={20}
       />
     </View>
   );
@@ -67,23 +57,8 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     </View>
   );
 
-  const Welcome = () => (
-    <>
-      <Text h2 bold color={colors.text} style={{ marginBottom: 12 }}>
-        Hello {magicAuth!.email?.split("@")[0] ?? "User"}
-      </Text>
-      <Text
-        fontFamily={fonts.montserrat.lightItalic}
-        color={colors.placeholder}
-      >
-        Welcome Back
-      </Text>
-    </>
-  );
-
   const Content = () => (
     <View style={styles.contentContainer}>
-      <Welcome />
       <List />
     </View>
   );

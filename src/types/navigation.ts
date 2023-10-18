@@ -8,6 +8,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { OwnedNft } from "alchemy-sdk";
 export enum Routes {
   Main = "Main",
+  Tab = "Tab",
   Auth = "Auth",
   Login = "Login",
   Home = "Home",

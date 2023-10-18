@@ -14,7 +14,7 @@ type UsePostTxReturn = {
   }) => Promise<PostTxReturn>;
 };
 
-export const usePostTx = async (): Promise<UsePostTxReturn> => {
+export const usePostTx = (): UsePostTxReturn => {
   const { provider, scaAddress } = useWalletContext();
   const { dispatchAlert } = useAlertContext();
   const [postTxResult, setPostTxResult] = useRecoilState(

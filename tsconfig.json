@@ -40,7 +40,7 @@
       "@theme/*": ["./shared/theme/*"],
       "@services/*": ["./services/*"],
       "@screens/*": ["./screens/*"],
-      "@assets": ["./assets/"],
+      "@assets/*": ["./assets/*"],
       "@local-storage": ["./services/local-storage"],
       "@hooks/*": ["./hooks/*"],
       "@store/*": ["./store/*"],

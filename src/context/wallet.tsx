@@ -103,10 +103,8 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       if (magicAuth === undefined || !magicAuth.isLoggedIn) {
         return;
       }
-      if (
-        !provider.isConnected() ||
-        (await provider.getAddress()) !== magicAuth.address
-      ) {
+      if (!provider.isConnected()) {
+        console.log("new login, connecting provider to account");
         await connectProviderToAccount(signer);
         setScaAddress(await provider.getAddress());
         return;
@@ -167,7 +165,9 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       if (provider.isConnected()) {
         setScaAddress(await provider.getAddress());
       } else {
+        console.log("alread logged in, connecting provider to account");
         await connectProviderToAccount(signer);
+        console.log("connected provider to account", provider.isConnected());
         setScaAddress(await provider.getAddress());
       }
       setLoading(false);

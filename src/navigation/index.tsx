@@ -110,7 +110,7 @@ const Navigation = () => {
   const MainNavigation = () => {
     return (
       <MainStack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name={Routes.Main} component={TabNavigation} />
+        <Stack.Screen name={Routes.Tab} component={TabNavigation} />
         <Stack.Screen name={Routes.Detail} component={DetailScreen} />
         <Stack.Screen name={Routes.Setting} component={SettingsScreen} />
       </MainStack.Navigator>

@@ -1,32 +1,11 @@
 export default [
   {
-    name: "React Native Dynamic Search Bar",
+    name: "Account Kit NFT",
     description:
-      "Dynamic fully customizable search bar for both iOS and Android",
-    language: "Typescript",
-    star: 342,
-    fork: 152,
-  },
-  {
-    name: "React Native Bouncy Checkbox",
-    description: "Fully customizable animated bouncy checkbox",
-    language: "Typescript",
-    star: 272,
-    fork: 22,
-  },
-  {
-    name: "React Native Apple Card Views",
-    description:
-      "Customizable and perfect clone of Apple, App Store Card Views",
-    language: "Typescript",
-    star: 266,
-    fork: 22,
-  },
-  {
-    name: "React Native Header View",
-    description: "Fully customizable Header View with multiple design options ",
-    language: "Typescript",
-    star: 412,
-    fork: 28,
+      "You minted this NFT with an ERC-4337 smart account powered by Account Kit.",
+    contract: "0x025C582D7d7ACA50ff37D730B628b3F65aC960C2",
+    metadata:
+      "https://static.alchemyapi.io/assets/accountkit/demo_metadata.json",
+    image: "https://static.alchemyapi.io/assets/accountkit/accountkit.jpg",
   },
 ];

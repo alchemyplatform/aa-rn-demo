@@ -1,13 +1,7 @@
 import { useTheme } from "@react-navigation/native";
 import * as React from "react";
-import {
-  Pressable,
-  StyleProp,
-  Text,
-  TextStyle,
-  View,
-  ViewStyle,
-} from "react-native";
+import { StyleProp, Text, TextStyle, View, ViewStyle } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import createStyles from "./Button.style";
 
 export const TouchableButton = (props: {
@@ -23,7 +17,7 @@ export const TouchableButton = (props: {
 
   return (
     <View style={[styles.actionContainer, props.containerStyle]}>
-      <Pressable
+      <TouchableOpacity
         style={[
           styles.button,
           props.buttonsStyle,
@@ -33,7 +27,7 @@ export const TouchableButton = (props: {
         onPress={() => props.handler()}
       >
         <Text style={[styles.text, props.textStyle]}>{props.title}</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };
