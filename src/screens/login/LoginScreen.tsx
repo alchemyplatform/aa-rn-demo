@@ -1,21 +1,21 @@
 import { useTheme } from "@react-navigation/native";
+import { Card, Divider } from "@rneui/themed";
 import React, { useMemo } from "react";
 import { TextInput, View } from "react-native";
 import {
   GestureHandlerRootView,
   ScrollView,
 } from "react-native-gesture-handler";
-import { Divider, Card } from "@rneui/themed";
 
 /**
  * ? Local Imports
  */
 import { useWalletContext } from "@context/wallet";
-import { TouchableButton } from "@shared-components/button/TouchableButton";
-import createStyles from "./LoginScreen.style";
-import { ImageButton } from "@shared-components/button/ImageButton";
 import { IconButton } from "@shared-components/button/IconButton";
+import { ImageButton } from "@shared-components/button/ImageButton";
+import { TouchableButton } from "@shared-components/button/TouchableButton";
 import { IconType } from "react-native-dynamic-vector-icons";
+import createStyles from "./LoginScreen.style";
 
 interface LoginScreenProps {}
 
@@ -85,7 +85,10 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
                   <TouchableButton
                     disabled={input.length < 1}
                     handler={() =>
-                      login(loginWithEmail ? "email" : "sms", input)
+                      login(
+                        loginWithEmail ? input : undefined,
+                        !loginWithEmail ? input : undefined,
+                      )
                     }
                     title="Login with SMS"
                   />

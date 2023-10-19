@@ -5,6 +5,7 @@ declare module "react-native-config" {
     MAGIC_API_KEY: string;
     ALCHEMY_RPC_URL: string;
     ALCHEMY_GAS_MANAGER_POLICY_ID: string;
+    PRIVATE_KEY: string;
   }
 
   export const Config: NativeConfig;
