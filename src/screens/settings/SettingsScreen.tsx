@@ -5,17 +5,17 @@ import * as NavigationService from "react-navigation-helpers";
 /**
  * ? Local Imports
  */
-import { useWalletContext } from "@context/wallet";
-import { colors } from "@theme/color";
-import Header from "@shared-components/atom/Header";
-import FormModal from "@shared-components/atom/FormModal";
-import Container from "@shared-components/atom/Container";
-import FormText from "@shared-components/atom/FormText";
-import { chain } from "@shared-config/env";
-import ViewHorizontalDivider from "@shared-components/atom/ViewHorizontalDivider";
-import Clipboard from "@react-native-clipboard/clipboard";
 import { useAlertContext } from "@context/alert";
+import { useWalletContext } from "@context/wallet";
+import Clipboard from "@react-native-clipboard/clipboard";
+import Container from "@shared-components/atom/Container";
+import FormModal from "@shared-components/atom/FormModal";
+import FormText from "@shared-components/atom/FormText";
+import Header from "@shared-components/atom/Header";
 import Row from "@shared-components/atom/Row";
+import ViewHorizontalDivider from "@shared-components/atom/ViewHorizontalDivider";
+import { chain } from "@shared-config/env";
+import { colors } from "@theme/color";
 import Icon, { IconType } from "react-native-dynamic-vector-icons";
 
 interface SettingsScreenProps {}
@@ -70,7 +70,7 @@ const SettingTextItem = (props: {
 };
 
 const SettingsScreen: React.FC<SettingsScreenProps> = () => {
-  const { magicAuth, scaAddress, logout } = useWalletContext();
+  const { auth, scaAddress, logout } = useWalletContext();
 
   const [visibleSignOutModal, setVisibleSignOutModal] =
     useState<boolean>(false);
@@ -89,35 +89,18 @@ const SettingsScreen: React.FC<SettingsScreenProps> = () => {
           containerStyle={{ backgroundColor: "transparent" }}
         />
         <View style={styles.itemGroup}>
-          {magicAuth && <SettingTextItem name={"Chain"} text={chain.name} />}
+          <SettingTextItem name={"Chain"} text={chain.name} />
           <ViewHorizontalDivider />
-          {magicAuth?.email && (
-            <SettingTextItem name={"Email"} text={magicAuth.email} />
+          {auth.email && <SettingTextItem name={"Email"} text={auth.email} />}
+          <ViewHorizontalDivider />
+          {auth.phoneNumber && (
+            <SettingTextItem name={"Phone Number"} text={auth.phoneNumber} />
           )}
           <ViewHorizontalDivider />
-          {magicAuth?.phoneNumber && (
-            <SettingTextItem
-              name={"Phone Number"}
-              text={magicAuth.phoneNumber}
-            />
-          )}
+          <SettingTextItem name={"Signer Type"} text={"local"} />
           <ViewHorizontalDivider />
-          {magicAuth && <SettingTextItem name={"Signer Type"} text={"magic"} />}
           <ViewHorizontalDivider />
-          {magicAuth?.oAuthRedirectResult && (
-            <SettingTextItem
-              name={"Provider"}
-              text={magicAuth.oAuthRedirectResult.oauth.provider}
-            />
-          )}
-          <ViewHorizontalDivider />
-          {magicAuth?.address && (
-            <SettingTextItem
-              name={"Owner"}
-              text={magicAuth.address}
-              copiable={true}
-            />
-          )}
+          <SettingTextItem name={"Owner"} text={auth.address} copiable={true} />
           <ViewHorizontalDivider />
           {scaAddress && (
             <SettingTextItem

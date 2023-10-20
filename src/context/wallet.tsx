@@ -4,11 +4,11 @@ import {
   LocalAccountSigner,
   SmartAccountSigner,
 } from "@alchemy/aa-core";
-// import { magic, useMagicContext } from "@context/magic";
 import { useAlchemyProvider } from "@hooks/useAlchemyProvider";
 import { useAsyncEffect } from "@hooks/useAsyncEffect";
-// import { OAuthRedirectResult } from "@magic-ext/react-native-bare-oauth";
 import { chain, entryPointAddress, privateKey } from "@shared-config/env";
+import console from "console";
+import { type } from "os";
 import React, {
   ReactNode,
   createContext,
@@ -16,8 +16,6 @@ import React, {
   useContext,
   useState,
 } from "react";
-// import { MagicAuth, MagicAuthType } from "types/magic";
-import { type } from "os";
 import { Auth } from "types/auth";
 import { WalletClient, createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
@@ -66,9 +64,14 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [scaAddress, setScaAddress] = useState<Address>();
   const [signer, setSigner] = useState<SmartAccountSigner>();
 
-  // const { signer, login: magicLogin, logout: magicLogout } = useMagicContext();
-  const { provider, connectProviderToAccount, disconnectProviderFromAccount } =
-    useAlchemyProvider({ entryPointAddress });
+  const {
+    provider,
+    // getAddressFromAccount,
+    connectProviderToAccount,
+    disconnectProviderFromAccount,
+  } = useAlchemyProvider({
+    entryPointAddress,
+  });
 
   const login = useCallback(
     async (email?: string, phoneNumber?: string) => {
@@ -109,10 +112,12 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     if (!auth.isLoggedIn || !signer) {
       return;
     }
-    if (!provider.isConnected()) {
+    if (!scaAddress) {
       console.log("new login, connecting provider to account");
       await connectProviderToAccount(signer);
       setScaAddress(await provider.getAddress());
+      // const address = await getAddressFromAccount(signer);
+      // if (address) setScaAddress(address);
       return;
     }
   }, [auth.isLoggedIn]);

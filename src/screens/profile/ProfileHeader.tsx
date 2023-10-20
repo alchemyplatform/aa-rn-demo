@@ -18,7 +18,7 @@ export type ProfileHeaderProps = {};
 // eslint-disable-next-line react/display-name, no-empty-pattern
 const ProfileHeader = ({}: ProfileHeaderProps): ReactElement => {
   const { top } = useSafeAreaInsets();
-  const { magicAuth, scaAddress: address } = useWalletContext();
+  const { auth, scaAddress: address } = useWalletContext();
 
   return (
     <View style={styles.container}>
@@ -62,10 +62,10 @@ const ProfileHeader = ({}: ProfileHeaderProps): ReactElement => {
         </View>
 
         <Row style={{ columnGap: 12 }}>
-          {magicAuth && (
+          {auth.email && (
             <View style={styles.section}>
               <FormText size={20} font={"B"}>
-                {magicAuth.email?.split("@")[0] ?? "User"}
+                {auth.email.split("@")[0] ?? "User"}
               </FormText>
             </View>
           )}

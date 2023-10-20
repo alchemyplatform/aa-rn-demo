@@ -27,7 +27,7 @@ const Navigation = () => {
   const scheme = useColorScheme();
   const isDarkMode = scheme === "dark";
 
-  const { magicAuth } = useWalletContext();
+  const { auth } = useWalletContext();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   React.useEffect((): any => {
@@ -126,7 +126,7 @@ const Navigation = () => {
       theme={isDarkMode ? DarkTheme : LightTheme}
     >
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {magicAuth?.isLoggedIn ? (
+        {auth.isLoggedIn ? (
           <Stack.Screen name={Routes.Main} component={MainNavigation} />
         ) : (
           <Stack.Screen name={Routes.Auth} component={AuthNavigation} />

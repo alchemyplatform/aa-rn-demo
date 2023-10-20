@@ -12,7 +12,6 @@ import {
  */
 import { useWalletContext } from "@context/wallet";
 import { IconButton } from "@shared-components/button/IconButton";
-import { ImageButton } from "@shared-components/button/ImageButton";
 import { TouchableButton } from "@shared-components/button/TouchableButton";
 import { IconType } from "react-native-dynamic-vector-icons";
 import createStyles from "./LoginScreen.style";
@@ -135,29 +134,6 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
               insetType="middle"
               style={{ marginVertical: 24 }}
             />
-
-            <View
-              style={{
-                flexDirection: "row",
-                flex: 1,
-                columnGap: 48,
-                justifyContent: "center",
-                marginVertical: 24,
-              }}
-            >
-              <ImageButton
-                handler={() => login("google")}
-                source={require("../../assets/images/google.png")}
-              />
-              <ImageButton
-                handler={() => login("apple")}
-                source={require("../../assets/images/apple.png")}
-              />
-              <ImageButton
-                handler={() => login("magic")}
-                source={require("../../assets/images/magic.png")}
-              />
-            </View>
           </Card>
         </ScrollView>
       </GestureHandlerRootView>
