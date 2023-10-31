@@ -33,6 +33,11 @@ if (typeof localStorage !== "undefined") {
   localStorage.debug = isDev ? "*" : "";
 }
 
+// for uuid (& web3 if you plan to use it)
+import "react-native-get-random-values";
+
+import "fastestsmallesttextencoderdecoder";
+
 // If using the crypto shim, uncomment the following line to ensure
 // crypto is loaded first, so it can populate global.crypto
 // require("crypto");

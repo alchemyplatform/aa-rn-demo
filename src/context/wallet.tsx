@@ -8,7 +8,6 @@ import { useAlchemyProvider } from "@hooks/useAlchemyProvider";
 import { useAsyncEffect } from "@hooks/useAsyncEffect";
 import { chain, entryPointAddress, privateKey } from "@shared-config/env";
 import console from "console";
-import { type } from "os";
 import React, {
   ReactNode,
   createContext,
@@ -75,6 +74,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
   const login = useCallback(
     async (email?: string, phoneNumber?: string) => {
+      const type = email ? "email" : "sms";
       try {
         setAuth({
           address: account.address,

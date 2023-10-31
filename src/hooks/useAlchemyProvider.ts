@@ -115,8 +115,7 @@ export const useAlchemyProvider = ({
     (signer: SmartAccountSigner, account?: Address) => {
       const connectedProvider = provider
         .connect((rpcClient) => {
-          console.log("1111111");
-          const acc = new LightSmartContractAccount({
+          return new LightSmartContractAccount({
             rpcClient,
             owner: signer,
             chain,
@@ -124,12 +123,6 @@ export const useAlchemyProvider = ({
             factoryAddress: lightAccountFactoryAddress,
             accountAddress: account,
           });
-          console.log("2222222");
-          acc.getAddress().then((address) => {
-            console.log("3333333", address);
-          });
-          console.log("4444444");
-          return acc;
         })
         .withAlchemyGasManager({
           policyId: gasManagerPolicyId,

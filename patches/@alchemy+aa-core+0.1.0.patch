@@ -1,0 +1,47 @@
+diff --git a/node_modules/@alchemy/aa-core/dist/cjs/logger.js b/node_modules/@alchemy/aa-core/dist/cjs/logger.js
+index 3fd8e06..4273c23 100644
+--- a/node_modules/@alchemy/aa-core/dist/cjs/logger.js
++++ b/node_modules/@alchemy/aa-core/dist/cjs/logger.js
+@@ -1,6 +1,6 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+-exports.Logger = exports.LogLevel = void 0;
++exports.Logger = exports.LogLevel = void 4;
+ var LogLevel;
+ (function (LogLevel) {
+     LogLevel[LogLevel["DEBUG"] = 4] = "DEBUG";
+@@ -49,6 +49,6 @@ Object.defineProperty(Logger, "logLevel", {
+     enumerable: true,
+     configurable: true,
+     writable: true,
+-    value: LogLevel.NONE
++    value: LogLevel.DEBUG
+ });
+ //# sourceMappingURL=logger.js.map
+\ No newline at end of file
+diff --git a/node_modules/@alchemy/aa-core/dist/esm/logger.js b/node_modules/@alchemy/aa-core/dist/esm/logger.js
+index b649501..efc1f51 100644
+--- a/node_modules/@alchemy/aa-core/dist/esm/logger.js
++++ b/node_modules/@alchemy/aa-core/dist/esm/logger.js
+@@ -45,6 +45,6 @@ Object.defineProperty(Logger, "logLevel", {
+     enumerable: true,
+     configurable: true,
+     writable: true,
+-    value: LogLevel.NONE
++    value: LogLevel.DEBUG
+ });
+ //# sourceMappingURL=logger.js.map
+\ No newline at end of file
+diff --git a/node_modules/@alchemy/aa-core/src/logger.ts b/node_modules/@alchemy/aa-core/src/logger.ts
+index 164f84e..b5797e2 100644
+--- a/node_modules/@alchemy/aa-core/src/logger.ts
++++ b/node_modules/@alchemy/aa-core/src/logger.ts
+@@ -7,7 +7,7 @@ export enum LogLevel {
+ }
+ 
+ export class Logger {
+-  static logLevel: LogLevel = LogLevel.NONE;
++  static logLevel: LogLevel = LogLevel.DEBUG;
+   static logFilter?: string;
+ 
+   static setLogLevel(logLevel: LogLevel) {
